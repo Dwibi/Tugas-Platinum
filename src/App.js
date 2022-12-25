@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import AppRoutes from "./config/router";
+import PublicRoutes from "./config/public_route";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
-function App() {
+function App(props) {
+  const { login } = useSelector((state) => state.loginData);
+  const [coba, setCoba] = useState("");
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("access_token");
+    setCoba(isLoggedIn);
+  }, [login]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!coba && <PublicRoutes {...props} />}
+      {coba && (
+        <>
+          <Navbar />
+          <Sidebar />
+          <AppRoutes {...props} />
+        </>
+      )}
     </div>
   );
 }
